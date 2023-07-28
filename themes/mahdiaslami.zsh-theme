@@ -14,11 +14,11 @@ function git_status() {
     local stash_count=$(git stash list | wc -l | awk '{print $1}')
 
     local result="%{$fg_bold[blue]%}git::("
-    [ "$stash_count" -gt 0 ] && result+="🍮"
-    result+=" %{$fg_bold[green]%}$branch%{$fg_bold[white]%}"
+    [ "$stash_count" -gt 0 ] && result+="🍮 "
+    result+="%{$fg_bold[green]%}$branch%{$fg_bold[white]%}"
     [ "$ahead" -gt 0 ] && result+=" $ahead 🚀"
     [ "$behind" -gt 0 ] && result+=" $behind 👇"
-    [ -n "$dirty" ] && result+=" 🍳 "
+    [ -n "$dirty" ] && result+=" 🍳"
     result+="%{$fg_bold[blue]%})"
     result+="%{$reset_color%}"
 
