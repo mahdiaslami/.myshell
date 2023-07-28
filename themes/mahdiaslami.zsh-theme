@@ -13,9 +13,9 @@ function git_status() {
     local dirty=$(git diff --shortstat 2>/dev/null)
 
     local result="%{$fg_bold[blue]%}git::(%{$fg_bold[green]%}$branch%{$fg_bold[white]%}"
-    [ "$ahead" -gt 0 ] && result+=" $ahead ⬆️ "
-    [ "$behind" -gt 0 ] && result+=" $behind ⬇️ "
-    [ -n "$dirty" ] && result+=" ✏️ "
+    [ "$ahead" -gt 0 ] && result+=" $ahead 🚀"
+    [ "$behind" -gt 0 ] && result+=" $behind 👇"
+    [ -n "$dirty" ] && result+=" 🍳 "
     result+="%{$fg_bold[blue]%})"
     result+="%{$reset_color%}"
 
