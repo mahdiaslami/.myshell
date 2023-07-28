@@ -1,0 +1,24 @@
+#!/bin/bash
+
+CURRENT_BRANCH=$(git br --show-current)
+
+git_branches_that_its_remote_has_been_gone() {
+    BNR=$(git branch --list --format "%(refname:short)%(upstream:track)" | grep "\[gone\]")
+    echo "${BNR//\[gone\]/}"
+}
+
+if [ -z "$1" ]; then
+    echo 'Please specify a branch name to checkout to it'
+elif [ "$1" = "--all" ]; then
+    # Remove branches that its remove has been gone
+    git branch -D $(git_branches_that_its_remote_has_been_gone)
+
+    # This command is equal to following command
+    # git branch -vv | grep ': gone]' | grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d
+else
+    # After merge sequence with branch name
+    git remote update origin --prune
+    git checkout "$1"
+    git pull
+    git branch -D $CURRENT_BRANCH
+fi
