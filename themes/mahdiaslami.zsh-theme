@@ -11,8 +11,11 @@ function git_status() {
     local behind=$(git rev-list --count --left-right @{upstream}...HEAD | cut -f1)
     local ahead=$(git rev-list --count --left-right @{upstream}...HEAD | cut -f2)
     local dirty=$(git diff --shortstat 2>/dev/null)
+    local stash_count=$(git stash list | wc -l | awk '{print $1}')
 
-    local result="%{$fg_bold[blue]%}git::(%{$fg_bold[green]%}$branch%{$fg_bold[white]%}"
+    local result="%{$fg_bold[blue]%}git::("
+    [ "$stash_count" -gt 0 ] && result+="🍮"
+    result+=" %{$fg_bold[green]%}$branch%{$fg_bold[white]%}"
     [ "$ahead" -gt 0 ] && result+=" $ahead 🚀"
     [ "$behind" -gt 0 ] && result+=" $behind 👇"
     [ -n "$dirty" ] && result+=" 🍳 "
@@ -21,6 +24,7 @@ function git_status() {
 
     echo "$result"
 }
+
 
 PROMPT+='$(git_status) '
 PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$reset_color%}"
