@@ -8,6 +8,7 @@ function git_status() {
     fi
 
     local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    local remote_branch_exists=$(git ls-remote --exit-code . "origin/$branch" >/dev/null 2>&1; echo $?)
     local behind=$(git rev-list --count --left-right @{upstream}...HEAD | cut -f1)
     local ahead=$(git rev-list --count --left-right @{upstream}...HEAD | cut -f2)
     local dirty=$(git diff --shortstat 2>/dev/null)
@@ -15,7 +16,9 @@ function git_status() {
 
     local result="%{$fg_bold[blue]%}git::("
     [ "$stash_count" -gt 0 ] && result+="🍮 "
-    result+="%{$fg_bold[green]%}$branch%{$fg_bold[white]%}"
+    result+="%{$fg_bold[green]%}$branch"
+    [ "$remote_branch_exists" -ne 0 ] && result+=" 👍"
+    result+="%{$fg_bold[white]%}"
     [ "$ahead" -gt 0 ] && result+=" $ahead 🚀"
     [ "$behind" -gt 0 ] && result+=" $behind 👇"
     [ -n "$dirty" ] && result+=" 🍳"
