@@ -28,3 +28,5 @@ function git_status() {
 
 PROMPT+='$(git_status) '
 PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$reset_color%}"
+
+unset LESS
