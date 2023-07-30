@@ -3,17 +3,19 @@ PROMPT="%{$fg[cyan]%}%c%{$reset_color%} "
 function git_branch_status() {
     local value=$(git branch --list "${ref/refs\/heads\//}" --format "%(upstream:track)")
     if [[ $value == "[gone]" ]]; then
-        echo "👍"
+        echo " 👍"
     elif [[ $value == *"ahead"* && $value == *"behind"* ]]; then
         ahead=$(echo "$value" | grep -o 'ahead [0-9]*' | awk '{print $2}')
         behind=$(echo "$value" | grep -o 'behind [0-9]*' | awk '{print $2}')
-        echo "$ahead 🚀 $behind 👇"
+        echo " $ahead🚀 $behind👇"
     elif [[ $value == *"ahead"* ]]; then
         ahead=$(echo "$value" | grep -o 'ahead [0-9]*' | awk '{print $2}')
-        echo "$ahead 🚀"
+        echo " $ahead🚀"
     elif [[ $value == *"behind"* ]]; then
         behind=$(echo "$value" | grep -o 'behind [0-9]*' | awk '{print $2}')
-        echo "$behind 👇"
+        echo " $behind👇"
+    else
+        echo ""
     fi
 }
 
@@ -39,7 +41,7 @@ function git_status() {
 
     result+="%{$fg_bold[green]%}$ref%{$fg_bold[white]%}"
 
-    result+=" $(git_branch_status $ref)"
+    result+="$(git_branch_status $ref)"
 
     local dirty=$(git diff --shortstat 2>/dev/null)
     if [ -n "$dirty" ]; then
