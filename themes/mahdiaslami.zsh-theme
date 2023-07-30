@@ -1,5 +1,22 @@
 PROMPT="%{$fg[cyan]%}%c%{$reset_color%} "
 
+function git_branch_status() {
+    local value=$(git branch --list "${ref/refs\/heads\//}" --format "%(upstream:track)")
+    if [[ $value == "[gone]" ]]; then
+        echo "👍"
+    elif [[ $value == *"ahead"* && $value == *"behind"* ]]; then
+        ahead=$(echo "$value" | grep -o 'ahead [0-9]*' | awk '{print $2}')
+        behind=$(echo "$value" | grep -o 'behind [0-9]*' | awk '{print $2}')
+        echo "$ahead 🚀 $behind 👇"
+    elif [[ $value == *"ahead"* ]]; then
+        ahead=$(echo "$value" | grep -o 'ahead [0-9]*' | awk '{print $2}')
+        echo "$ahead 🚀"
+    elif [[ $value == *"behind"* ]]; then
+        behind=$(echo "$value" | grep -o 'behind [0-9]*' | awk '{print $2}')
+        echo "$behind 👇"
+    fi
+}
+
 function git_status() {
     local git_dir="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
     
@@ -19,34 +36,14 @@ function git_status() {
         || ref=$(git describe --tags --exact-match HEAD 2> /dev/null) \
         || ref=$(git rev-parse --short HEAD 2> /dev/null) \
         || return 0
+
     result+="%{$fg_bold[green]%}$ref%{$fg_bold[white]%}"
 
-    local branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-    if [ -n "$branch" ]; then
-        local remote_branch_exists=$(git ls-remote --exit-code . "origin/$branch" >/dev/null 2>&1; echo $?)
-        if [ "$remote_branch_exists" -ne 0 ]; then
-            result+=" 👍"
-        fi
-
-        local ahead=0
-        local behind=0
-        if [ "$remote_branch_exists" -eq 0 ]; then
-            ahead=$(git rev-list --count --left-right @{upstream}...HEAD | cut -f2)
-            behind=$(git rev-list --count --left-right @{upstream}...HEAD | cut -f1)
-        fi
-
-        if [ "$ahead" -gt 0 ]; then
-            result+=" $ahead 🚀"
-        fi
-
-        if [ "$behind" -gt 0 ]; then
-            result+=" $behind 👇"
-        fi
-    fi
+    result+=" $(git_branch_status $ref)"
 
     local dirty=$(git diff --shortstat 2>/dev/null)
     if [ -n "$dirty" ]; then
-        result+=" 🍳"
+        result+=" 🍺"
     fi
 
     result+="%{$fg_bold[blue]%})"
