@@ -43,7 +43,7 @@ function git_status() {
 
     result+="$(git_branch_status $ref)"
 
-    local dirty=$(git diff --shortstat 2>/dev/null)
+    local dirty=$(git status -s 2>/dev/null)
     if [ -n "$dirty" ]; then
         result+=" 🍺"
     fi
