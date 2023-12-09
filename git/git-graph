@@ -1,9 +1,10 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-    git log --oneline --graph --date-order
+    git log --oneline --graph --date-order --decorate --all
 elif [ "$1" = "--all" ] || [ "$1" = "-a" ]; then
     git log --oneline --graph --reflog --date-order
+
 elif [ "$1" = "update" ]; then
     if [ -z "$2" ]; then
         git remote update origin --prune
