@@ -36,8 +36,9 @@ function a() {
 alias at='php artisan test'
 alias af='php artisan test --filter'
 
-# Laravel envoy
+# Laravel envoy and sail
 alias envoy='./vendor/bin/envoy'
+alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 
 # Git commands
 # Add git command directory to PATH variable
