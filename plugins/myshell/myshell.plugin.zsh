@@ -40,6 +40,7 @@ alias af='php artisan test --filter'
 alias envoy='./vendor/bin/envoy'
 alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 
-# Git commands
+# Commands
 # Add git command directory to PATH variable
-export PATH=$PATH:$HOME/.myshell/git
+# Add docker command directory to PATH variable
+export PATH=$PATH:$HOME/.myshell/git:$HOME/.myshell/docker
