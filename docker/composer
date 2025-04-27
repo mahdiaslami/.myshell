@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # docker run -it -v ./:/src -w /src --net=host -u $(id -u):$(id -g) composer:latest $@
-docker run -it -v "$(pwd)":/src -w /src --net=host -u $(id -u):$(id -g) php-with-composer composer
+docker run -it -v "$(pwd)":/src -w /src --net=host -u $(id -u):$(id -g) php-with-composer composer $@
