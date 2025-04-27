@@ -1,12 +1,32 @@
-# Base image with PHP CLI
+# docker/development/workspace/Dockerfile
+# Use the official PHP CLI image as the base
 FROM php:8.2-cli
 
-# Install required extensions
-RUN apt-get update && apt-get install -y \
+# Install system dependencies and build libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    unzip \
     libpq-dev \
-    && docker-php-ext-install pdo_pgsql \
+    libonig-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    libicu-dev \
+    libzip-dev \
+    libpcre3-dev \
+    && docker-php-ext-install -j$(nproc) \
+    pdo_mysql \
+    pdo_pgsql \
+    pgsql \
+    opcache \
+    intl \
+    zip \
+    bcmath \
+    soap \
+    pcntl \
     && pecl install redis \
-    && docker-php-ext-enable redis || true
+    && docker-php-ext-enable redis || true \
+    && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set up composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
