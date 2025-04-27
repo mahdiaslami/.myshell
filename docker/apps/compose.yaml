@@ -11,14 +11,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: mahdyaslami@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: 123456789
-    ports:
-      - "8001:80"
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: mahdyaslami@gmail.com
+  #     PGADMIN_DEFAULT_PASSWORD: 123456789
+  #   ports:
+  #     - "8001:80"
 
   redis:
     image: redis:7
