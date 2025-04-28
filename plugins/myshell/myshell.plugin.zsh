@@ -15,7 +15,6 @@ function serve() {
     fi
 }
 
-
 # PHP aliases
 alias phpunit='./vendor/bin/phpunit'
 alias pu='./vendor/bin/phpunit'
@@ -44,3 +43,19 @@ alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 # Add git command directory to PATH variable
 # Add docker command directory to PATH variable
 export PATH=$PATH:$HOME/.myshell/git:$HOME/.myshell/docker
+
+# Proxy setup
+function setproxy() {
+    if ss -ltn | grep -q '127.0.0.1:8118'; then
+        export HTTP_PROXY="http://127.0.0.1:8118"
+        export HTTPS_PROXY="http://127.0.0.1:8118"
+        echo "Proxy set to http://127.0.0.1:8118"
+    else
+        echo "Privoxy is not running on 127.0.0.1:8118"
+    fi
+}
+
+function unsetproxy() {
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+}
