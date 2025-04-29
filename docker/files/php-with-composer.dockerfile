@@ -34,8 +34,7 @@ RUN docker-php-ext-install -j$(nproc) \
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-RUN pecl install redis \
-    && docker-php-ext-enable redis
+RUN pecl install redis && docker-php-ext-enable redis
 
 # Set up composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
