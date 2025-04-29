@@ -14,9 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libicu-dev \
     libzip-dev \
     libpcre3-dev \
+    postgresql-client \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN docker-php-ext-install -j$(nproc) \
+    RUN docker-php-ext-install -j$(nproc) \
     pdo_mysql \
     pdo_pgsql \
     pgsql \
@@ -28,7 +29,7 @@ RUN docker-php-ext-install -j$(nproc) \
     pcntl
 
 RUN pecl install redis \
-    && docker-php-ext-enable redis \
+    && docker-php-ext-enable redis
 
 # Set up composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
