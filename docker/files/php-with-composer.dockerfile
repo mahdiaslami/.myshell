@@ -15,9 +15,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip-dev \
     libpcre3-dev \
     postgresql-client \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libpng-dev \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-    RUN docker-php-ext-install -j$(nproc) \
+RUN docker-php-ext-install -j$(nproc) \
     pdo_mysql \
     pdo_pgsql \
     pgsql \
@@ -26,7 +29,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zip \
     bcmath \
     soap \
-    pcntl
+    pcntl \
+    gd
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
 RUN pecl install redis \
     && docker-php-ext-enable redis
