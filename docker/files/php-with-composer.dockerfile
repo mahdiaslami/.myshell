@@ -2,7 +2,7 @@
 # Use the official PHP CLI image as the base
 FROM php:8.2-cli
 
-# Install system dependencies and build libraries
+# Install system dependencies and build libraries, including git
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     unzip \
@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfreetype6-dev \
     libjpeg-dev \
     libpng-dev \
+    git \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN docker-php-ext-install -j$(nproc) \
