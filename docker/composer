@@ -2,8 +2,17 @@
 
 mkdir -p ~/.composer
 
-docker run -it -v "$(pwd)":/src \
-    -v "$HOME/.composer":/tmp/composer \
-    -e COMPOSER_HOME=/tmp/composer \
-    -w /src --net=host \
-    -u $(id -u):$(id -g) php-with-composer composer $@
+docker run -it \
+  -v "$(pwd)":/src \
+  -v "$HOME/.composer":/tmp/composer \
+  -e COMPOSER_HOME=/tmp/composer \
+  -e http_proxy="${http_proxy}" \
+  -e https_proxy="${https_proxy}" \
+  -e HTTP_PROXY="${HTTP_PROXY}" \
+  -e HTTPS_PROXY="${HTTPS_PROXY}" \
+  -e no_proxy="${no_proxy}" \
+  -w /src \
+  --net=host \
+  -u "$(id -u):$(id -g)" \
+  php-with-composer \
+  composer "$@"
