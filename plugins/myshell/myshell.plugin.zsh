@@ -42,7 +42,8 @@ alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 # Commands
 # Add git command directory to PATH variable
 # Add docker command directory to PATH variable
-export PATH=$PATH:$HOME/.myshell/git:$HOME/.myshell/docker
+# Add composer bin directory to PATH varible
+export PATH=$PATH:$HOME/.myshell/git:$HOME/.myshell/docker:$HOME/.composer/vendor/bin
 
 # Proxy setup
 function setproxy() {
