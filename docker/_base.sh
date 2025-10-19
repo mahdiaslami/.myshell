@@ -5,6 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 docker run -it \
   -v "$(pwd)":$(pwd) \
   -v "$HOME/.composer":$HOME/.composer \
+  -v "$HOME/.config/psysh":$HOME/.config/psysh \
+  -v "$HOME/.git-credentials":$HOME/.git-credentials \
+  -v "$HOME/.gitconfig":$HOME/.gitconfig \
   -v "${SCRIPT_DIR}/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini" \
   -e COMPOSER_HOME=$HOME/.composer \
   -e http_proxy="${http_proxy}" \
