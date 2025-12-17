@@ -2,7 +2,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-docker run -it \
+docker run --init -it \
   -v "$(pwd)":$(pwd) \
   -v "$HOME/.composer":$HOME/.composer \
   -v "$HOME/.config/psysh":$HOME/.config/psysh \
