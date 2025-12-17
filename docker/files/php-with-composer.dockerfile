@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcurl4-openssl-dev \
     libicu-dev \
     libzip-dev \
-    libpcre3-dev \
+    libpcre2-dev \
     postgresql-client \
     libfreetype6-dev \
     libjpeg-dev \
@@ -32,6 +32,9 @@ RUN docker-php-ext-install -j$(nproc) \
     soap \
     pcntl \
     gd
+
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
