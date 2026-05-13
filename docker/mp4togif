@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Exit if no input is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <input.mp4> [fps]"
+  exit 1
+fi
+
+INPUT="$1"
+FPS="${2:-10}" # default fps = 10
+OUTPUT="${INPUT%.*}.gif"
+
+ffmpeg -i "$INPUT" -vf "fps=$FPS" -loop 0 "$OUTPUT"
+
+echo "Converted: $OUTPUT"
