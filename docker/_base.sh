@@ -14,6 +14,8 @@ docker run --init $TTY_ARGS \
   -v "$HOME/.config/psysh":$HOME/.config/psysh \
   -v "$HOME/.git-credentials":$HOME/.git-credentials \
   -v "$HOME/.gitconfig":$HOME/.gitconfig \
+  -v /etc/ssl/certs:/etc/ssl/certs:ro \
+  -v /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro \
   -v "${SCRIPT_DIR}/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini" \
   -e COMPOSER_HOME=$HOME/.composer \
   -e http_proxy="${http_proxy}" \
