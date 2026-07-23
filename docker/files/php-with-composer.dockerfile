@@ -1,6 +1,7 @@
 # docker/development/workspace/Dockerfile
 # Use the official PHP CLI image as the base
-FROM php:8.2-cli
+ARG PHP_VERSION=8.2
+FROM php:${PHP_VERSION}-cli
 
 # Install system dependencies and build libraries, including git
 RUN apt-get update && apt-get install -y --no-install-recommends \
