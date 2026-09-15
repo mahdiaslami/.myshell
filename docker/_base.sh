@@ -8,6 +8,12 @@ if [ -t 0 ] && [ -t 1 ]; then
   TTY_ARGS="-it"
 fi
 
+PHP_VERSION_FILE="$SCRIPT_DIR/.php-version"
+PHP_VERSION="8.2"
+if [ -f "$PHP_VERSION_FILE" ]; then
+  read -r PHP_VERSION < "$PHP_VERSION_FILE"
+fi
+
 docker run --init $TTY_ARGS \
   -v "$(pwd)":$(pwd) \
   -v "$HOME/.composer":$HOME/.composer \
@@ -27,4 +33,4 @@ docker run --init $TTY_ARGS \
   -w "$(pwd)" \
   --net=host \
   -u "$(id -u):$(id -g)" \
-  php-with-composer $@
+  "php-with-composer:$PHP_VERSION" $@

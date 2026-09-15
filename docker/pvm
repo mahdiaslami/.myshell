@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+# PVM - PHP Version Manager
+# Manage PHP versions used in docker/_base.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VERSION_FILE="$SCRIPT_DIR/.php-version"
+
+# Read current version (default 8.2 if file missing)
+get_current_version() {
+    if [ -f "$VERSION_FILE" ]; then
+        cat "$VERSION_FILE"
+    else
+        echo "8.2"
+    fi
+}
+
+# Get all available php-with-composer images
+get_available_versions() {
+    docker images --filter "reference=*php-with-composer*" --format "{{.Tag}}" | grep -E '^[0-9]+\.[0-9]+$' | sort -V
+}
+
+# List available PHP versions
+cmd_list() {
+    local versions
+    versions=$(get_available_versions)
+    
+    if [ -z "$versions" ]; then
+        echo "No php-with-composer images found."
+        return 1
+    fi
+    
+    # Get current version from .php-version
+    local current_version
+    current_version=$(get_current_version)
+    
+    echo "Available PHP versions:"
+    while IFS= read -r version; do
+        if [ "$version" = "$current_version" ]; then
+            echo "  $version (current)"
+        else
+            echo "  $version"
+        fi
+    done <<< "$versions"
+}
+
+# Switch to a different PHP version
+cmd_use() {
+    local target_version="$1"
+    
+    if [ -z "$target_version" ]; then
+        echo "Usage: pvm use <version>"
+        echo "Available versions: $(get_available_versions | tr '\n' ' ')"
+        return 1
+    fi
+    
+    # Check if the version exists in docker images
+    if ! docker images --filter "reference=php-with-composer:$target_version" --format "{{.Tag}}" | grep -q "^${target_version}$"; then
+        echo "Error: Version $target_version is not installed."
+        echo "Available versions: $(get_available_versions | tr '\n' ' ')"
+        return 1
+    fi
+    
+    # Update .php-version with the new version
+    local current_version
+    current_version=$(get_current_version)
+    
+    echo "$target_version" > "$VERSION_FILE"
+    echo "Switched from $current_version to $target_version"
+}
+
+# Main command dispatcher
+if [ -z "$1" ]; then
+    echo "PVM - PHP Version Manager"
+    echo "Usage: pvm <command> [args]"
+    echo ""
+    echo "Commands:"
+    echo "  list    List available PHP versions"
+    echo "  use <v> Switch to PHP version (e.g., pvm use 8.3)"
+    exit 0
+fi
+
+command="$1"
+shift
+
+case "$command" in
+    list|ls)
+        cmd_list
+        ;;
+    use)
+        cmd_use "$@"
+        ;;
+    *)
+        echo "Unknown command: $command"
+        echo "Usage: pvm <command> [args]"
+        echo ""
+        echo "Commands:"
+        echo "  list    List available PHP versions"
+        echo "  use <v> Switch to PHP version"
+        exit 1
+        ;;
+esac
