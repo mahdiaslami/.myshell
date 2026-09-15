@@ -3,6 +3,17 @@
 ARG PHP_VERSION=8.2
 FROM php:${PHP_VERSION}-cli
 
+# ARG HTTP_PROXY
+# ARG HTTPS_PROXY
+# ENV http_proxy=$HTTP_PROXY
+# ENV https_proxy=$HTTPS_PROXY
+
+# Setting proxy for apt-get - only if present
+# RUN if [ -n "$HTTP_PROXY" ]; then \
+#     echo "Acquire::http::Proxy \"${HTTP_PROXY}\";" > /etc/apt/apt.conf.d/99proxy && \
+#     echo "Acquire::https::Proxy \"${HTTPS_PROXY}\";" >> /etc/apt/apt.conf.d/99proxy; \
+#     fi
+
 # Install system dependencies and build libraries, including git
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -34,6 +45,8 @@ RUN docker-php-ext-install -j$(nproc) \
     pcntl \
     gd
 
+# ENV pear_proxy=$HTTP_PROXY
+# RUN pear config-set http_proxy "${HTTP_PROXY}"
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
